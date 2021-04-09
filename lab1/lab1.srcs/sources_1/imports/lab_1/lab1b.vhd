@@ -19,8 +19,6 @@ ARCHITECTURE Behavior OF LFDetector_behav IS
 BEGIN
 -- DO NOT modify any signals, ports, or entities above this line
 -- add your code below this line
-
-
     PROCESS(Fuel3, Fuel2, FUel1, Fuel0)
     BEGIN
         FuelWarningLight <= (NOT Fuel3) AND (NOT Fuel2);
