@@ -1,7 +1,0 @@
-Running: xsim.dir/lab1b_tb_vhd_behav/xsimk.exe -simmode gui -wdb lab1b_tb_vhd_behav.wdb -simrunnum 0 -socket 63257
-Design successfully loaded
-Design Loading Memory Usage: 6304 KB (Peak: 6304 KB)
-Design Loading CPU Usage: 31 ms
-Simulation completed
-Simulation Memory Usage: 6868 KB (Peak: 6868 KB)
-Simulation CPU Usage: 31 ms

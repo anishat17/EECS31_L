@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------
 -- Company: EECS 31L - S21
--- Engineer: <PUT YOUR NAME HERE>
+-- Engineer: Shaoxuan Yuan
 --
 -- Design Name:   LFDetector_behav
 -- Module Name:   lab1b_tb.vhd
@@ -74,31 +74,69 @@ BEGIN
 		-- Place/replace stimulus here
         -- add additional stimulus as needed
 
-        -- testing value "0000", expecting FuelWarningLight = __?
+        -- testing value "0000", expecting FuelWarningLight = 1?
 		Fuel3 <= '0'; Fuel2 <= '0'; Fuel1 <= '0'; Fuel0 <='0';
 		wait for 10 ns;
 		
-		-- full fuel
-		Fuel3 <= '1'; Fuel2 <= '1'; Fuel1 <= '1'; Fuel0 <='1';
-		wait for 10 ns;
-		
-		-- not enough fuel
+		-- testing value "0001", expecting FuelWarningLight = 1?
 		Fuel3 <= '0'; Fuel2 <= '0'; Fuel1 <= '0'; Fuel0 <='1';
 		wait for 10 ns;
 		
-		-- not enough fuel
+		-- testing value "0010", expecting FuelWarningLight = 1?
 		Fuel3 <= '0'; Fuel2 <= '0'; Fuel1 <= '1'; Fuel0 <='0';
 		wait for 10 ns;
 		
-		-- not enough fuel
+		-- testing value "0011", expecting FuelWarningLight = 1?
 		Fuel3 <= '0'; Fuel2 <= '0'; Fuel1 <= '1'; Fuel0 <='1';
 		wait for 10 ns;
+
+		-- testing value "0100", expecting FuelWarningLight = 0?
+		Fuel3 <= '0'; Fuel2 <= '1'; Fuel1 <= '0'; Fuel0 <='0';
+		wait for 10 ns;
 		
-		-- enough fuel
-		Fuel3 <= '1'; Fuel2 <= '0'; Fuel1 <= '0'; Fuel0 <='0';
+        -- testing value "0101", expecting FuelWarningLight = 0?
+		Fuel3 <= '0'; Fuel2 <= '1'; Fuel1 <= '0'; Fuel0 <='1';
+		wait for 10 ns;
+		
+		-- testing value "0110", expecting FuelWarningLight = 0?
+		Fuel3 <= '0'; Fuel2 <= '1'; Fuel1 <= '1'; Fuel0 <='0';
+		wait for 10 ns;
+		
+		-- testing value "0111", expecting FuelWarningLight = 0?
+		Fuel3 <= '0'; Fuel2 <= '1'; Fuel1 <= '1'; Fuel0 <='1';
 		wait for 10 ns;
        
-        -- test more values
+       -- testing value "1000", expecting FuelWarningLight = 0?
+		Fuel3 <= '1'; Fuel2 <= '0'; Fuel1 <= '0'; Fuel0 <='0';
+		wait for 10 ns;
+		
+		-- testing value "1001", expecting FuelWarningLight = 0?
+		Fuel3 <= '1'; Fuel2 <= '0'; Fuel1 <= '0'; Fuel0 <='1';
+		wait for 10 ns;
+		
+		-- testing value "1010", expecting FuelWarningLight = 0?
+		Fuel3 <= '1'; Fuel2 <= '0'; Fuel1 <= '1'; Fuel0 <='0';
+		wait for 10 ns;
+		
+		-- testing value "1011", expecting FuelWarningLight = 0?
+		Fuel3 <= '1'; Fuel2 <= '0'; Fuel1 <= '1'; Fuel0 <='1';
+		wait for 10 ns;
+		
+		-- testing value "1100", expecting FuelWarningLight = 0?
+		Fuel3 <= '1'; Fuel2 <= '1'; Fuel1 <= '0'; Fuel0 <='0';
+		wait for 10 ns;
+		
+		-- testing value "1101", expecting FuelWarningLight = 0?
+		Fuel3 <= '1'; Fuel2 <= '1'; Fuel1 <= '0'; Fuel0 <='1';
+		wait for 10 ns;
+		
+		-- testing value "1110", expecting FuelWarningLight = 0?
+		Fuel3 <= '1'; Fuel2 <= '1'; Fuel1 <= '1'; Fuel0 <='0';
+		wait for 10 ns;
+		
+		-- testing value "1111", expecting FuelWarningLight = 0?
+		Fuel3 <= '1'; Fuel2 <= '1'; Fuel1 <= '1'; Fuel0 <='1';
+		wait for 10 ns;
         
 		wait; -- will wait forever
 	END PROCESS;
