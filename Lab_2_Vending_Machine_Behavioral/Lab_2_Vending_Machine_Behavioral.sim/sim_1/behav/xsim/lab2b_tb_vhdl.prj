@@ -1,0 +1,7 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../Lab_2_Vending_Machine_Behavioral.srcs/sources_1/imports/Downloads/lab2b.vhd" \
+"../../../../Lab_2_Vending_Machine_Behavioral.srcs/sources_1/imports/Downloads/lab2b_tb.vhd" \
+
+# Do not sort compile order
+nosort
