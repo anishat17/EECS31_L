@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 -- Company:       QV's Minions
--- Engineer:      <YOUR NAME HERE>
+-- Engineer:      Shaoxuan Yuan
 -- 
 -- VHDL Test Bench Created by ISE for module: Lab2s_FSM
 -- 
