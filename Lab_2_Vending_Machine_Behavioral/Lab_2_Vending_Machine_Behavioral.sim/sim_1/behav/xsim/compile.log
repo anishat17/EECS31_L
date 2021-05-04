@@ -1,0 +1,4 @@
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Xilinx/EECS31_L/Lab_2_Vending_Machine_Behavioral/Lab_2_Vending_Machine_Behavioral.srcs/sources_1/imports/Downloads/lab2b.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'Lab2b_FSM'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Xilinx/EECS31_L/Lab_2_Vending_Machine_Behavioral/Lab_2_Vending_Machine_Behavioral.srcs/sources_1/imports/Downloads/lab2b_tb.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'lab2b_tb'
