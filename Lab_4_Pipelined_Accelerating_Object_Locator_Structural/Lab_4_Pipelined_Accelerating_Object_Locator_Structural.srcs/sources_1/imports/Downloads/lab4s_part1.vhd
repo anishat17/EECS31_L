@@ -2,9 +2,9 @@
 -- EECS31L Assignment 4
 -- Locator Structural Model
 ----------------------------------------------------------------------
--- Student First Name : Your First Name
--- Student Last Name : Your Last Name
--- Student ID : Your Student ID
+-- Student First Name : Shaoxuan
+-- Student Last Name : Yuan
+-- Student ID : 89832399
 ----------------------------------------------------------------------
 
 ---------- Components library ----------
@@ -29,7 +29,7 @@ ARCHITECTURE Beh OF RegFile IS
       ARRAY (0 TO 7) OF std_logic_vector(15 DOWNTO 0); 
    SIGNAL regArray : regArray_type;
 BEGIN
-   WriteProcess: PROCESS(Clk)    
+   WriteProcess: PROCESS(Clk)
    BEGIN
       IF (Clk = '1' AND Clk'EVENT) THEN
          IF (Rst = '1') THEN
@@ -245,7 +245,7 @@ ENTITY Controller IS
     PORT(R_en: OUT std_logic;
          W_en: OUT std_logic;
          R_Addr1: OUT std_logic_vector(2 DOWNTO 0);
-			R_Addr2: OUT std_logic_vector(2 DOWNTO 0);
+         R_Addr2: OUT std_logic_vector(2 DOWNTO 0);
          W_Addr: OUT std_logic_vector(2 DOWNTO 0);
          Shifter_Sel: OUT std_logic;
          Selector_Sel: OUT std_logic;
@@ -258,20 +258,176 @@ END Controller;
 
 
 ARCHITECTURE Beh OF Controller IS
+    TYPE Statetype IS (S_Start, Comp1, Comp1_Reg0, Comp1_Reg1, 
+                                Comp2, Comp2_Reg0, Comp2_Reg1,
+                                Comp3, Comp3_Reg0, Comp3_Reg1,
+                                Comp4, Comp4_Reg0, Comp4_Reg1,
+                                Comp5, Comp5_Reg0, Comp5_Reg1,
+                                Comp6, Comp6_Reg0, Comp6_Reg1,
+                                S_End);
+    SIGNAL Currstate, Nextstate: Statetype;
+BEGIN
+    CombLogic: PROCESS(Start, Rst, Currstate)
+    BEGIN
+        IF (Rst = '1') THEN
+            Oe <= '0' AFTER 11 NS;
+            Done <= '0' AFTER 11 NS;
+            Nextstate <= S_Start AFTER 11 NS;
+        END IF;
+        
+        CASE Currstate IS
+            WHEN S_Start =>
+                IF (Start = '1') THEN
+                   -- Oe <= '0' AFTER 11 NS;
+                    Nextstate <= Comp1 AFTER 11 NS;
+                END IF;
+                    
+            WHEN Comp1 =>
+                R_en <= '1' AFTER 11 NS;
+                R_Addr1 <= "010" AFTER 11 NS;
+                R_Addr2 <= "010" AFTER 11 NS;
+                W_Addr <= "101" AFTER 11 NS;
+                W_en <= '1' AFTER 11 NS;
+                
+                ALU_sel <= '1' AFTER 11 NS;
+                Selector_Sel <= '1' AFTER 11 NS;
+                
+                OutReg_Ld <= '1' AFTER 11 NS;
+                Oe <= '0' AFTER 11 NS;
+                Nextstate <= Comp1_Reg0 AFTER 11 NS;
+                
+            WHEN Comp1_Reg0 =>
+                Nextstate <= Comp1_Reg1 AFTER 11 NS;
 
--------------------------------------------------------
--- Hint:
--- Controller shall consist of a CombLogic process 
--- containing case-statement and a StateReg process.
---      
--------------------------------------------------------
+            WHEN Comp1_Reg1 =>
+                Nextstate <= Comp2 AFTER 11 NS;                
+                                
+            WHEN Comp2 =>
+                R_en <= '1' AFTER 11 NS;
+                R_Addr1 <= "001" AFTER 11 NS;
+                R_Addr2 <= "101" AFTER 11 NS;
+                W_Addr <= "101" AFTER 11 NS;
+                W_en <= '1' AFTER 11 NS;
+                
+                ALU_sel <= '1' AFTER 11 NS;
+                Selector_Sel <= '1' AFTER 11 NS;
+                
+                OutReg_Ld <= '1' AFTER 11 NS;
+                Oe <= '0' AFTER 11 NS;
+                Nextstate <= Comp2_Reg0 AFTER 11 NS;
+                
+            WHEN Comp2_Reg0 =>
+                Nextstate <= Comp2_Reg1 AFTER 11 NS;
 
- -- add your code here
+            WHEN Comp2_Reg1 =>
+                Nextstate <= Comp3 AFTER 11 NS;         
+                
+            WHEN Comp3 =>
+                R_en <= '1' AFTER 11 NS;
+                R_Addr1 <= "001" AFTER 11 NS;
+                R_Addr2 <= "101" AFTER 11 NS;
+                W_Addr <= "101" AFTER 11 NS;
+                W_en <= '1' AFTER 11 NS;
+                
+                ALU_sel <= '1' AFTER 11 NS;
+                Shifter_Sel <= '0' AFTER 11 NS;
+                Selector_Sel <= '0' AFTER 11 NS;
+                
+                OutReg_Ld <= '1' AFTER 11 NS;
+                Oe <= '0' AFTER 11 NS;       
+                Nextstate <= Comp3_Reg0 AFTER 11 NS;       
+
+            WHEN Comp3_Reg0 =>
+                Nextstate <= Comp3_Reg1 AFTER 11 NS;
+
+            WHEN Comp3_Reg1 =>
+                Nextstate <= Comp4 AFTER 11 NS;     
+                
+            WHEN Comp4 =>
+                R_en <= '1' AFTER 11 NS;
+                R_Addr1 <= "010" AFTER 11 NS;
+                R_Addr2 <= "011" AFTER 11 NS;
+                W_Addr <= "110" AFTER 11 NS;
+                W_en <= '1' AFTER 11 NS;
+                
+                ALU_sel <= '1' AFTER 11 NS;
+                Selector_Sel <= '1' AFTER 11 NS;
+                
+                OutReg_Ld <= '1' AFTER 11 NS;
+                Oe <= '0' AFTER 11 NS;
+                Nextstate <= Comp4_Reg0 AFTER 11 NS;
+                
+            WHEN Comp4_Reg0 =>
+                Nextstate <= Comp4_Reg1 AFTER 11 NS;
+
+            WHEN Comp4_Reg1 =>
+                Nextstate <= Comp5 AFTER 11 NS;    
+                
+            WHEN Comp5 =>
+                R_en <= '1' AFTER 11 NS;
+                R_Addr1 <= "101" AFTER 11 NS;
+                R_Addr2 <= "110" AFTER 11 NS;
+                W_Addr <= "111" AFTER 11 NS;
+                W_en <= '1' AFTER 11 NS;
+                
+                ALU_sel <= '0' AFTER 11 NS;
+                Selector_Sel <= '1' AFTER 11 NS;
+                
+                OutReg_Ld <= '1' AFTER 11 NS;
+                Oe <= '0' AFTER 11 NS;    
+                Nextstate <= Comp5_Reg0 AFTER 11 NS;
+
+            WHEN Comp5_Reg0 =>
+                Nextstate <= Comp5_Reg1 AFTER 11 NS;
+
+            WHEN Comp5_Reg1 =>
+                Nextstate <= Comp6 AFTER 11 NS;                  
+                
+            WHEN Comp6 =>
+                R_en <= '1' AFTER 11 NS;
+                R_Addr1 <= "111" AFTER 11 NS;
+                R_Addr2 <= "100" AFTER 11 NS;
+                W_Addr <= "111" AFTER 11 NS;
+                W_en <= '1' AFTER 11 NS;
+                
+                ALU_sel <= '0' AFTER 11 NS;
+                Selector_Sel <= '1' AFTER 11 NS;
+                
+                OutReg_Ld <= '1' AFTER 11 NS;            
+                Oe <= '0' AFTER 11 NS;
+                Nextstate <= Comp6_Reg0 AFTER 11 NS;
+                
+            WHEN Comp6_Reg0 =>
+                Nextstate <= Comp6_Reg1 AFTER 11 NS;
+
+            WHEN Comp6_Reg1 =>
+                Nextstate <= S_End AFTER 11 NS;                         
+                                        
+            WHEN S_End =>
+                W_en <= '0' AFTER 11 NS;
+                R_en <= '0' AFTER 11 NS;
+                OutReg_Ld <= '0' AFTER 11 NS;
+                Done <= '1' AFTER 11 NS;
+                Oe <= '1' AFTER 11 NS;
+                Nextstate <= S_Start AFTER 11 NS;
+                
+            WHEN OTHERS =>
+        END CASE;
+
+    END PROCESS;
+    
+    StateReg: PROCESS(Clk)
+    BEGIN
+        IF (Clk = '1' AND Clk'EVENT) THEN            
+            Currstate <= Nextstate AFTER 4 NS;
+        END IF;
+    END PROCESS;
+    
 
 END Beh;
 
 
----------- Locator (with clock cycle =  ?? NS )----------
+---------- Locator (with clock cycle =  38 NS )----------
 --         INDICATE YOUR CLOCK CYCLE TIME ABOVE      ----
 
 library IEEE;
@@ -333,7 +489,7 @@ architecture Struct of Locator_struct is
        PORT(R_en: OUT std_logic;
             W_en: OUT std_logic;
             R_Addr1: OUT std_logic_vector(2 DOWNTO 0);
-				R_Addr2: OUT std_logic_vector(2 DOWNTO 0);
+            R_Addr2: OUT std_logic_vector(2 DOWNTO 0);
             W_Addr: OUT std_logic_vector(2 DOWNTO 0);
             Shifter_sel: OUT std_logic;
             Selector_sel: OUT std_logic;
@@ -343,11 +499,104 @@ architecture Struct of Locator_struct is
             Done: OUT std_logic;
             Start, Clk, Rst: IN std_logic); 
      END COMPONENT;
-
--- do not modify any code above this line
--- add signals needed below. hint: name them something you can keep track of while debugging/testing
--- add your code starting here
-
-
+    -- do not modify any code above this line
+    -- add signals needed below. hint: name them something you can keep track of while debugging/testing
+    -- add your code starting here
+    SIGNAL R_en_out, W_en_out, Shifter_sel_out, Selector_sel_out, ALU_sel_out, Ld_out, Oe_out, Done_out: std_logic;
+    SIGNAL R_Addr1_out, R_Addr2_out, W_Addr_out: std_logic_vector(2 DOWNTO 0);
+    SIGNAL Reg_Data1_out, Reg_Data2_out: std_logic_vector(15 DOWNTO 0);
+    SIGNAL ALU_Result: STD_LOGIC_VECTOR (15 DOWNTO 0);
+    SIGNAL Shifter_Result: std_logic_vector(15 DOWNTO 0);
+    SIGNAL Selector_Result: std_logic_vector(15 DOWNTO 0);
+    SIGNAL Reg_Result: std_logic_vector(15 DOWNTO 0);
+    SIGNAL Location: std_logic_vector(15 DOWNTO 0);
+    SIGNAL Reg_Data1_Result, Reg_Data2_Result: std_logic_vector(15 DOWNTO 0);
+    SIGNAL ALU_Reg_Result, Shifter_Reg_Result: std_logic_vector(15 DOWNTO 0);
+BEGIN 
+    Controller_Part: Controller PORT MAP
+    (R_en => R_en_out, 
+    W_en => W_en_out, 
+    R_Addr1 => R_Addr1_out, 
+    R_Addr2 => R_Addr2_out, 
+    W_Addr => W_Addr_out, 
+    Shifter_sel => Shifter_sel_out,
+    Selector_sel => Selector_sel_out, 
+    ALU_sel => ALU_sel_out, 
+    OutReg_Ld => Ld_out, 
+    Oe => Oe_out, 
+    Done => Done_out, 
+    Start => Start, 
+    Clk => Clk, 
+    Rst => Rst);
+    
+    RegFile_Part: RegFile PORT MAP
+    (R_Addr1 => R_Addr1_out,
+    R_Addr2 => R_Addr2_out, 
+    W_Addr => W_Addr_out,
+    R_en => R_en_out, 
+    W_en => W_en_out, 
+    Reg_Data1 => Reg_Data1_out,
+    Reg_Data2 => Reg_Data2_out,
+    W_Data => Selector_Result,
+    Clk => Clk,
+    Rst => Rst);
+    
+    Reg_Data1: Reg PORT MAP
+    (I => Reg_Data1_out,
+    Q => Reg_Data1_result,
+    Ld => Ld_out,
+    Clk => Clk,
+    Rst => Rst);
+    
+    Reg_Data2: Reg PORT MAP
+    (I => Reg_Data2_out,
+    Q => Reg_Data2_result,
+    Ld => Ld_out,
+    Clk => Clk,
+    Rst => Rst);
+    
+    ALU_Part: ALU PORT MAP
+    (Sel => ALU_sel_out,
+    A => Reg_Data2_result,
+    B => Reg_Data1_result,
+    ALU_Out => ALU_Result);
+    
+    ALU_Out_Reg: Reg PORT MAP
+    (I => ALU_Result,
+    Q => ALU_Reg_Result,
+    Ld => Ld_out,
+    Clk => Clk,
+    Rst => Rst);
+        
+    Shifter_Part: Shifter PORT MAP
+    (I => Reg_Data2_result,
+    Q => Shifter_Result,
+    sel => Shifter_sel_out);
+    
+    Shifter_Out_Reg: Reg PORT MAP
+    (I => Shifter_Result,
+    Q => Shifter_Reg_Result,
+    Ld => Ld_out,
+    Clk => Clk,
+    Rst => Rst);
+    
+    Selector_Part: Selector PORT MAP
+    (sel => Selector_sel_out,
+    x => Shifter_Reg_Result,
+    y => ALU_Reg_Result,
+    f => Selector_Result);    
+    
+    ThreeStateBuff_Part: ThreeStateBuff PORT MAP
+    (Control_Input => Oe_out,
+    Data_Input => Selector_Result,
+    Output => Location);
+    
+    PROCESS (Clk)
+    BEGIN
+        IF (Clk = '1' AND Clk'EVENT) THEN         
+            Loc <= Location;
+            Done <= Done_out;        
+        END IF;
+    END PROCESS;
+    
 end Struct;
-

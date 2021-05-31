@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 -- Company: EECS 31L - S'21
--- Engineer: 
+-- Engineer: Shaoxuan Yuan
 --
 -- Create Date:   
 -- Design Name:   
@@ -33,10 +33,10 @@ USE std.textio.ALL; -- for write, writelin
 -- arithmetic functions with Signed or Unsigned values
 --USE ieee.numeric_std.ALL;
  
-ENTITY lab3s_tb IS
-END lab3s_tb;
+ENTITY lab4s_tb IS
+END lab4s_tb;
  
-ARCHITECTURE behavior OF lab3s_tb IS 
+ARCHITECTURE behavior OF lab4s_tb IS 
  
     -- Component Declaration for the Unit Under Test (UUT)
  
@@ -61,7 +61,7 @@ ARCHITECTURE behavior OF lab3s_tb IS
    signal Done : std_logic;
 
    -- Clock period definitions; change to correct value; code will not compile w/o it
-   constant Clk_period : time := ____ ns;
+   constant Clk_period : time := 22 ns;
  
 BEGIN
  
@@ -104,9 +104,15 @@ BEGIN
         WAIT UNTIL rising_edge(clk); -- wait for a rising edge so that it is easier to calculate next several wait statements
         WAIT FOR 10 NS; -- hold for some amount of time
         Start <= '0';
-       
-		-- remove line below & add your own waits, asserts, etc.
-		WAIT FOR 200 NS; -- arbitrary wait time
+        
+        WAIT UNTIL Done = '1';        
+        ASSERT Loc = X"1b50" REPORT "Loc = 1b50 fail with test case 0" SEVERITY WARNING;
+        Rst <= '1';
+        WAIT FOR Clk_period + 1 NS;
+        Rst <= '0';
+        
+        WAIT UNTIL Done = '0';
+        ASSERT Loc = "ZZZZZZZZZZZZZZZZ" REPORT "Loc = Z fail with test case 1" SEVERITY WARNING;
 
         WRITE (stringbuff, string'("Simulation Ends at "));
         WRITE (stringbuff, now);
