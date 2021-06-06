@@ -247,6 +247,8 @@ ENTITY Controller IS
          R_Addr1: OUT std_logic_vector(2 DOWNTO 0);
          R_Addr2: OUT std_logic_vector(2 DOWNTO 0);
          W_Addr: OUT std_logic_vector(2 DOWNTO 0);
+         Reg_Data1_Sel: OUT std_logic;
+         Reg_Data2_Sel: OUT std_logic;
          Shifter_Sel: OUT std_logic;
          Selector_Sel: OUT std_logic;
          ALU_sel : OUT std_logic;
@@ -258,12 +260,12 @@ END Controller;
 
 
 ARCHITECTURE Beh OF Controller IS
-    TYPE Statetype IS (S_Start, Comp1, Comp1_Reg0, Comp1_Reg1, 
-                                Comp2, Comp2_Reg0, Comp2_Reg1,
+    TYPE Statetype IS (S_Start, Comp1, Comp1_Reg0, 
+                                Comp2, Comp2_Reg0,
                                 Comp3, Comp3_Reg0, Comp3_Reg1,
                                 Comp4, Comp4_Reg0, Comp4_Reg1,
-                                Comp5, Comp5_Reg0, Comp5_Reg1,
-                                Comp6, Comp6_Reg0, Comp6_Reg1,
+                                Comp5, Comp5_Reg0,
+                                Comp6, Comp6_Reg0,
                                 S_End);
     SIGNAL Currstate, Nextstate: Statetype;
 BEGIN
@@ -278,11 +280,13 @@ BEGIN
         CASE Currstate IS
             WHEN S_Start =>
                 IF (Start = '1') THEN
-                   -- Oe <= '0' AFTER 11 NS;
                     Nextstate <= Comp1 AFTER 11 NS;
                 END IF;
                     
             WHEN Comp1 =>
+                Reg_Data1_Sel <= '0';
+                Reg_Data2_Sel <= '0';
+                
                 R_en <= '1' AFTER 11 NS;
                 R_Addr1 <= "010" AFTER 11 NS;
                 R_Addr2 <= "010" AFTER 11 NS;
@@ -297,15 +301,15 @@ BEGIN
                 Nextstate <= Comp1_Reg0 AFTER 11 NS;
                 
             WHEN Comp1_Reg0 =>
-                Nextstate <= Comp1_Reg1 AFTER 11 NS;
-
-            WHEN Comp1_Reg1 =>
-                Nextstate <= Comp2 AFTER 11 NS;                
-                                
-            WHEN Comp2 =>
+                Nextstate <= Comp2 AFTER 11 NS;  
+                         
+            WHEN Comp2 =>            
+                Reg_Data1_Sel <= '1';
+                Reg_Data2_Sel <= '0';
+                
                 R_en <= '1' AFTER 11 NS;
                 R_Addr1 <= "001" AFTER 11 NS;
-                R_Addr2 <= "101" AFTER 11 NS;
+                R_Addr2 <= "001" AFTER 11 NS;
                 W_Addr <= "101" AFTER 11 NS;
                 W_en <= '1' AFTER 11 NS;
                 
@@ -317,12 +321,11 @@ BEGIN
                 Nextstate <= Comp2_Reg0 AFTER 11 NS;
                 
             WHEN Comp2_Reg0 =>
-                Nextstate <= Comp2_Reg1 AFTER 11 NS;
-
-            WHEN Comp2_Reg1 =>
-                Nextstate <= Comp3 AFTER 11 NS;         
+                Nextstate <= Comp3 AFTER 11 NS;      
                 
             WHEN Comp3 =>
+                Reg_Data1_Sel <= '1';
+                
                 R_en <= '1' AFTER 11 NS;
                 R_Addr1 <= "001" AFTER 11 NS;
                 R_Addr2 <= "101" AFTER 11 NS;
@@ -344,6 +347,9 @@ BEGIN
                 Nextstate <= Comp4 AFTER 11 NS;     
                 
             WHEN Comp4 =>
+                Reg_Data1_Sel <= '0';
+                Reg_Data2_Sel <= '0';
+            
                 R_en <= '1' AFTER 11 NS;
                 R_Addr1 <= "010" AFTER 11 NS;
                 R_Addr2 <= "011" AFTER 11 NS;
@@ -364,6 +370,9 @@ BEGIN
                 Nextstate <= Comp5 AFTER 11 NS;    
                 
             WHEN Comp5 =>
+                Reg_Data1_Sel <= '0';
+                Reg_Data2_Sel <= '0';
+            
                 R_en <= '1' AFTER 11 NS;
                 R_Addr1 <= "101" AFTER 11 NS;
                 R_Addr2 <= "110" AFTER 11 NS;
@@ -378,18 +387,17 @@ BEGIN
                 Nextstate <= Comp5_Reg0 AFTER 11 NS;
 
             WHEN Comp5_Reg0 =>
-                Nextstate <= Comp5_Reg1 AFTER 11 NS;
-
-            WHEN Comp5_Reg1 =>
-                Nextstate <= Comp6 AFTER 11 NS;                  
+                Nextstate <= Comp6 AFTER 11 NS;               
                 
             WHEN Comp6 =>
+                Reg_Data1_Sel <= '1';
+                Reg_Data2_Sel <= '0';
+            
                 R_en <= '1' AFTER 11 NS;
                 R_Addr1 <= "111" AFTER 11 NS;
                 R_Addr2 <= "100" AFTER 11 NS;
                 W_Addr <= "111" AFTER 11 NS;
                 W_en <= '1' AFTER 11 NS;
-                
                 ALU_sel <= '0' AFTER 11 NS;
                 Selector_Sel <= '1' AFTER 11 NS;
                 
@@ -398,10 +406,8 @@ BEGIN
                 Nextstate <= Comp6_Reg0 AFTER 11 NS;
                 
             WHEN Comp6_Reg0 =>
-                Nextstate <= Comp6_Reg1 AFTER 11 NS;
-
-            WHEN Comp6_Reg1 =>
-                Nextstate <= S_End AFTER 11 NS;                         
+                Nextstate <= S_End AFTER 11 NS;
+                    
                                         
             WHEN S_End =>
                 W_en <= '0' AFTER 11 NS;
@@ -491,6 +497,8 @@ architecture Struct of Locator_struct is
             R_Addr1: OUT std_logic_vector(2 DOWNTO 0);
             R_Addr2: OUT std_logic_vector(2 DOWNTO 0);
             W_Addr: OUT std_logic_vector(2 DOWNTO 0);
+            Reg_Data1_Sel: OUT std_logic;
+            Reg_Data2_Sel: OUT std_logic;
             Shifter_sel: OUT std_logic;
             Selector_sel: OUT std_logic;
             ALU_sel : OUT std_logic;
@@ -503,6 +511,8 @@ architecture Struct of Locator_struct is
     -- add signals needed below. hint: name them something you can keep track of while debugging/testing
     -- add your code starting here
     SIGNAL R_en_out, W_en_out, Shifter_sel_out, Selector_sel_out, ALU_sel_out, Ld_out, Oe_out, Done_out: std_logic;
+    SIGNAL Reg_Data1_sel_out, Reg_Data2_sel_out: std_logic;
+    SIGNAL Reg_Data1_selector_result, Reg_Data2_selector_result: std_logic_vector(15 DOWNTO 0);
     SIGNAL R_Addr1_out, R_Addr2_out, W_Addr_out: std_logic_vector(2 DOWNTO 0);
     SIGNAL Reg_Data1_out, Reg_Data2_out: std_logic_vector(15 DOWNTO 0);
     SIGNAL ALU_Result: STD_LOGIC_VECTOR (15 DOWNTO 0);
@@ -519,6 +529,8 @@ BEGIN
     R_Addr1 => R_Addr1_out, 
     R_Addr2 => R_Addr2_out, 
     W_Addr => W_Addr_out, 
+    Reg_Data1_Sel => Reg_Data1_sel_out,
+    Reg_Data2_Sel => Reg_Data2_sel_out,
     Shifter_sel => Shifter_sel_out,
     Selector_sel => Selector_sel_out, 
     ALU_sel => ALU_sel_out, 
@@ -540,16 +552,28 @@ BEGIN
     W_Data => Selector_Result,
     Clk => Clk,
     Rst => Rst);
+        
+    Reg_Data1_Selector: Selector PORT MAP
+    (sel => Reg_Data1_sel_out,
+    x => Reg_Data1_out,
+    y => ALU_Reg_Result,
+    f => Reg_Data1_selector_result); 
+    
+    Reg_Data2_Selector: Selector PORT MAP
+    (sel => Reg_Data2_sel_out,
+    x => Reg_Data2_out,
+    y => Shifter_Reg_Result,
+    f => Reg_Data2_selector_result); 
     
     Reg_Data1: Reg PORT MAP
-    (I => Reg_Data1_out,
+    (I => Reg_Data1_selector_result,
     Q => Reg_Data1_result,
     Ld => Ld_out,
     Clk => Clk,
     Rst => Rst);
     
     Reg_Data2: Reg PORT MAP
-    (I => Reg_Data2_out,
+    (I => Reg_Data2_selector_result,
     Q => Reg_Data2_result,
     Ld => Ld_out,
     Clk => Clk,
@@ -569,7 +593,7 @@ BEGIN
     Rst => Rst);
         
     Shifter_Part: Shifter PORT MAP
-    (I => Reg_Data2_result,
+    (I => Reg_Data1_result,
     Q => Shifter_Result,
     sel => Shifter_sel_out);
     

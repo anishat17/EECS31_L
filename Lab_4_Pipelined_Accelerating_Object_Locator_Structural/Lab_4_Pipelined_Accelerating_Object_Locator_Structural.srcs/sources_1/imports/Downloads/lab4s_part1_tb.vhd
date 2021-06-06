@@ -61,7 +61,7 @@ ARCHITECTURE behavior OF lab4s_tb IS
    signal Done : std_logic;
 
    -- Clock period definitions; change to correct value; code will not compile w/o it
-   constant Clk_period : time := 22 ns;
+   constant Clk_period : time := 28 ns;
  
 BEGIN
  
